@@ -20,7 +20,7 @@ public class AccountController : ControllerBase
         _tokenService = tokenService;
     }
 
-    // 1. API Đăng ký tài khoản
+   
     [HttpPost("register")]
     public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
     {
@@ -37,7 +37,7 @@ public class AccountController : ControllerBase
             Email = registerDto.Email.ToLower()
         };
 
-        // Identity tự động mã hóa mật khẩu và lưu vào Database
+        
         var result = await _userManager.CreateAsync(user, registerDto.Password);
 
         if (!result.Succeeded) 
@@ -51,11 +51,11 @@ public class AccountController : ControllerBase
         };
     }
 
-    // 2. API Đăng nhập
+    
     [HttpPost("login")]
     public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
     {
-        // Tìm User theo Email
+        
         var user = await _userManager.Users
             .SingleOrDefaultAsync(x => x.Email == loginDto.Email.ToLower());
 
@@ -66,7 +66,7 @@ public class AccountController : ControllerBase
 
         if (!result) return Unauthorized("Invalid email or password");
 
-        // Trả về thông tin kèm Token "thẻ bài"
+        
         return new UserDto
         {
             Email = user.Email ?? string.Empty,
