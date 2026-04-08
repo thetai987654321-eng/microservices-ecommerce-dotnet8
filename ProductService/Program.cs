@@ -9,11 +9,11 @@ using ProductService.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Cấu hình MongoDB
+
 builder.Services.Configure<MongoDbSettings>(
     builder.Configuration.GetSection("MongoDbSettings"));
 
-// 2. Cấu hình Authentication (JWT)
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -32,19 +32,19 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
-// 3. Register Dependency Injection
+
 builder.Services.AddSingleton<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductCoreService, ProductCoreService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-// 4. Cấu hình Swagger để hiện nút "Authorize" (Cái khóa)
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Product Service API", Version = "v1" });
 
-    // Định nghĩa chuẩn JWT Bearer cho Swagger
+    
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = "Dán Token vào đây theo định dạng: Bearer {your_token}",
@@ -68,7 +68,7 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// 5. Middleware Pipeline (Thứ tự cực kỳ quan trọng)
+
 app.UseMiddleware<ExceptionMiddleware>();
 
 if (app.Environment.IsDevelopment())
@@ -79,7 +79,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// QUAN TRỌNG: Auth luôn đứng trước Authorization
+ 
 app.UseAuthentication(); 
 app.UseAuthorization();
 
